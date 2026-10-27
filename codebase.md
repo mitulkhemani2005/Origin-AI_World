@@ -8,6 +8,7 @@
 ├── idea.md                             # Theme and intended simulation behavior
 ├── codebase.md                         # This file: file map and debugging guide
 ├── implementation-status.md            # Verified mechanisms, prototype limits, and further stages
+├── requirements.txt                    # Backend Python dependencies
 ├── .env.example                        # Ollama and backend settings
 ├── frontend/
 │   ├── index.html                      # Standalone Vite app shell
@@ -20,7 +21,6 @@
 │       ├── world-inspection.js         # Hover descriptions for world entities and terrain
 │       └── styles.css                  # Dark, responsive spectator interface
 └── backend/
-    ├── requirements.txt                # FastAPI, Uvicorn, and HTTPX dependencies
     └── app/
         ├── main.py                     # API-only FastAPI app, CORS, and lifecycle
         ├── settings.py                 # Ollama model, decision cadence, month length, and database settings
@@ -86,21 +86,21 @@ Place memories are stored per `Agent` in `place_memories`; successful food and w
 
 ## Debugging path
 
-1. Open `GET /api/health`; confirm Ollama is reachable, Qwen is installed, and `compute.device`/`vram_bytes` report actual residency. Requests ask for all GPU layers; GPU allocation failure retries with `num_gpu=0`. Warmup and `keep_alive=-1` avoid repeated unloads.
+1. Open `GET /api/health`; confirm Ollama is reachable, the model selected by `OLLAMA_MODEL` is installed, and `compute.device`/`vram_bytes` report actual residency. Requests ask for all GPU layers; GPU allocation failure retries with `num_gpu=0`. Warmup and `keep_alive=-1` avoid repeated unloads.
 2. Inspect `GET /api/world`; check `global_model`, `running`, `processing`, the fixed `time_scale=1`, agent locations, needs, disease, and `last_action`.
 3. Read the retained `events` in the response for `fallback_decision`, rejected actions, hazards, births, deaths, and spectator changes. The frontend groups these records into All, Work, Newborns, and Deaths timeline sections.
 4. For an action without the expected result, inspect its action event and proposed action. The engine may have moved an agent toward a resource instead of completing the action immediately, or rejected a choice due to age, location, resources, or missing consent.
 5. For an event drop, confirm the pointer ray intersects the walkable land and inspect the resulting event's `x`, `y`, `source`, and affected agent IDs.
 6. For a visual mismatch, compare the payload to `frontend/src/app.js`. Run `npm test --prefix frontend` before the production build: bundling alone cannot detect unsupported runtime methods. The viewport shows frame errors instead of leaving a silently frozen ocean. Texture UV longitude must align with `worldToScene`; camera matrices must update before labels and picking.
 7. The standalone frontend uses Vite at port 5173. Confirm FastAPI is running at 8000 and that `frontend/vite.config.js` proxies `/api`.
-8. The SQLite snapshot is at `backend/data/world.sqlite3` by default. Preserve local data when debugging; `.gitignore` intentionally excludes it.
-9. For malformed model output, inspect `OllamaClient.decide`: Qwen returns a short numbered choice, reason and optional message. The server maps the choice back to a concrete bounded action. Do not restore the old 48-token full-action schema, which truncated IDs and drove nearly continuous fallbacks.
+8. The SQLite snapshot is at `data/world.sqlite3` by default. Preserve local data when debugging; `.gitignore` intentionally excludes it.
+9. For malformed model output, inspect `OllamaClient.decide`: Gemma 3 returns a short numbered choice, reason and optional message. The server maps the choice back to a concrete bounded action. Do not restore the old 48-token full-action schema, which truncated IDs and drove nearly continuous fallbacks.
 
-Run backend checks with `$env:PYTHONPATH='backend'; python -m unittest discover -s backend/tests -v`. Each check uses temporary databases. Tests include biology advancing while model calls wait and pause discarding a late model result.
+Run backend checks with `PYTHONPATH=backend .venv/bin/python -m unittest discover -s backend/tests -v`. Each check uses temporary databases. Tests include biology advancing while model calls wait and pause discarding a late model result.
 
 ## Local startup
 
-Install Python requirements and run `npm ci --prefix frontend`. Start FastAPI with `python -m uvicorn app.main:app --app-dir backend --reload --port 8000`, then in a second terminal start Vite with `npm run dev --prefix frontend`. Visit `http://localhost:5173`; FastAPI serves only the API and API documentation.
+Install Python requirements with `uv pip install --python .venv/bin/python -r requirements.txt` and run `npm ci --prefix frontend`. Start FastAPI with `.venv/bin/uvicorn app.main:app --app-dir backend --reload --port 8000`, then in a second terminal start Vite with `npm run dev --prefix frontend`. Visit `http://localhost:5173`; FastAPI serves only the API and API documentation.
 
 For production, `npm run build --prefix frontend` creates a separate `frontend/dist` static app. Host it independently and configure backend `FRONTEND_ORIGINS` with its browser origin(s).
 
@@ -108,7 +108,7 @@ For production, `npm run build --prefix frontend` creates a separate `frontend/d
 
 - This is a small illustrative simulation, not a scientific reconstruction of millions of years of hominin evolution.
 - Biome, animal, crop, disease, mortality, and hazard rules remain prototype simplifications.
-- LLM behavior is limited to each agent's available action schema and the information in its individual observation. The Qwen 0.5B default is compact and quick, with less reasoning capacity than larger models.
+- LLM behavior is limited to each agent's available action schema and the information in its individual observation. The default Gemma 3 270M is compact and quick, with less reasoning capacity than larger models.
 - A single local SQLite snapshot is persisted. The browser uses polling, not a streaming transport.
 - The 36×18 world is a compact spherical abstraction with fictional geography, not a scientific map of Earth or a reconstruction of millions of years of evolution.
 

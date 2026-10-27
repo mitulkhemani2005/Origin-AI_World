@@ -3,14 +3,21 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# Load local overrides first; fill remaining values from the checked-in template.
+load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(PROJECT_ROOT / ".env.example")
+
 
 class Settings:
     """Runtime settings read from environment variables."""
 
     app_name = "Origin: AI World API"
     ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    # The simulation intentionally pins one shared, small Qwen brain for every person.
-    ollama_model = "qwen2.5:0.5b"
+    # The selected shared model comes from .env or its .env.example template value.
+    ollama_model = os.getenv("OLLAMA_MODEL", "").strip()
     ollama_timeout_seconds = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "20"))
     decision_interval_seconds = float(os.getenv("DECISION_INTERVAL_SECONDS", "1.2"))
     # Request all layers on GPU; a GPU allocation failure may retry once using RAM/CPU.
@@ -23,7 +30,7 @@ class Settings:
     max_saved_events = int(os.getenv("MAX_SAVED_EVENTS", "1000"))
     database_path = os.getenv(
         "AI_WORLD_DATABASE",
-        str(Path(__file__).resolve().parents[2] / "data" / "world.sqlite3"),
+        str(PROJECT_ROOT / "data" / "world.sqlite3"),
     )
 
 

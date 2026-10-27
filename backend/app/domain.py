@@ -8,6 +8,8 @@ from typing import Literal
 
 from pydantic import AliasChoices, BaseModel, Field, field_validator
 
+from app.settings import settings
+
 
 class EventSource(str, Enum):
     NATURAL = "natural"
@@ -328,7 +330,7 @@ class WorldState(BaseModel):
     id: str
     seed: int
     # One world-wide brain model is used by every independent person.
-    global_model: str = "qwen2.5:0.5b"
+    global_model: str = Field(default_factory=lambda: settings.ollama_model)
     tick: int = 0
     # A monthly world step advances on elapsed time, independently from agent decisions.
     # Legacy aliases keep existing SQLite snapshots loadable after this calendar rename.

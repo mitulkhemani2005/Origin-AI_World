@@ -76,7 +76,7 @@ class OllamaClient:
         choices = self.action_choices(agent, world)
         full = self._observation(agent, world)
         land = next((cell for cell in world.terrain if cell.x == agent.x and cell.y == agent.y), None)
-        # Salient private context fits a 0.5B brain better than a full world schema and raw UUIDs.
+        # Salient private context fits this compact model better than a full world schema and raw UUIDs.
         observation = {
             "you": {key: full["agent"][key] for key in (
                 "name", "sex", "age_years", "health", "hunger", "thirst", "energy", "disease",
@@ -411,7 +411,7 @@ class OllamaClient:
     @staticmethod
     def _family_names(parent: Agent, mother: Agent, world: WorldState,
                       other_parent_id: str | None = None) -> list[str]:
-        """Offer short names influenced by the parents; the person chooses one through Qwen."""
+        """Offer short names influenced by the parents; the person chooses one through Gemma."""
         other = next((person for person in world.agents
                       if person.id == (other_parent_id or mother.other_parent_id)), None)
         roots = [mother.name, other.name if other else parent.name]

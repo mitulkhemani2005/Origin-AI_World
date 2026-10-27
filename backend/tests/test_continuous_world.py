@@ -164,7 +164,7 @@ class ContinuousWorldTests(unittest.IsolatedAsyncioTestCase):
                    original_client(transport=httpx.MockTransport(respond), **kwargs)):
             self.assertTrue(await OllamaClient().warm_model())
         self.assertEqual([body["options"]["num_gpu"] for body in captured], [999, 0])
-        self.assertTrue(all(body["model"] == "qwen2.5:0.5b" and body["keep_alive"] == -1 for body in captured))
+        self.assertTrue(all(body["model"] == "gemma3:270m" and body["keep_alive"] == -1 for body in captured))
 
     async def test_backend_starts_installed_local_ollama_when_service_is_down(self):
         from app import main
@@ -181,7 +181,7 @@ class ContinuousWorldTests(unittest.IsolatedAsyncioTestCase):
     async def test_runtime_reports_actual_gpu_residency(self):
         original_client = httpx.AsyncClient
         def respond(request):
-            return httpx.Response(200, json={"models": [{"name": "qwen2.5:0.5b", "size_vram": 481810185}]})
+            return httpx.Response(200, json={"models": [{"name": "gemma3:270m", "size_vram": 481810185}]})
         with patch("app.agent_brain.ollama_client.httpx.AsyncClient", side_effect=lambda **kwargs:
                    original_client(transport=httpx.MockTransport(respond), **kwargs)):
             info = await OllamaClient().runtime_info()

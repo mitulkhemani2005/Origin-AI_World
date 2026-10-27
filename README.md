@@ -6,14 +6,14 @@
 
 ## The idea
 
-Two agents start the world: one male and one female, in a viable natural habitat near food, wood, and water. Both use the pinned local Ollama model `qwen2.5:0.5b`, while keeping distinct memories, traits, relationships, and observations. They remember useful food and water locations and places they build, and can route toward remembered resources or shelters when urgent needs or dangerous weather arise. They need to find food and water, rest, respond to illness and danger, communicate, form relationships, and decide whether to have and care for children. As generations grow, they may teach, build homes and property, form groups, fight, create beliefs, or disappear.
+Two agents start the world: one male and one female, in a viable natural habitat near food, wood, and water. Both use the configured local Ollama model (default `gemma3:270m`), while keeping distinct memories, traits, relationships, and observations. They remember useful food and water locations and places they build, and can route toward remembered resources or shelters when urgent needs or dangerous weather arise. They need to find food and water, rest, respond to illness and danger, communicate, form relationships, and decide whether to have and care for children. As generations grow, they may teach, build homes and property, form groups, fight, create beliefs, or disappear.
 
 The spectator does not direct normal daily choices. The world advances on its own once started. A spectator can inspect and adjust an individual's biology or drag an event onto the land. Disasters and diseases can also happen through simulation rules without intervention. [Implementation status and further plans](implementation-status.md) distinguishes working mechanisms from future research.
 
 ## What the simulation models
 
 1. Every simulated month, the backend advances seasons, weather, resources, biological needs, disease, pregnancy, age, animal lives, crops, and natural hazards. The spherical world has oceans, rivers, lakes, mountains, grasslands, farmland, deserts, ice, and several forest biomes.
-2. Decision-capable living agents get separate private observations and a short menu of feasible opportunities. Qwen chooses one intention and explains why. A chosen resource trip continues across physical movement steps; a construction project can gather the required material batch. Source fields distinguish LLM decisions, continued intentions, and inference fallbacks.
+2. Decision-capable living agents get separate private observations and a short menu of feasible opportunities. Gemma 3 chooses one intention and explains why. A chosen resource trip continues across physical movement steps; a construction project can gather the required material batch. Source fields distinguish LLM decisions, continued intentions, and inference fallbacks.
 3. The simulation resolves choices under shared world rules. Agents can forage, drink, hunt, tame, care for animals, gather, farm, cook, talk, teach, form groups, build, bond, reproduce, fight, and create cultural beliefs.
 4. Wild animals move, eat, drink, reproduce, and die within shared population limits. Missing food wildlife replenishes slowly; excess animals migrate away without leaving carcass piles. Agents can tame domestic species or companions, provide care, collect eggs and milk, or hunt wildlife. Edible plants regrow in suitable biomes.
 5. Farm plots need a farm, knowledge, suitable soil, water, and time. Harvests can fail through drought, fire, or neglect. Raw meat, spoiled food, and contaminated water can cause foodborne or waterborne disease.
@@ -28,7 +28,7 @@ If Ollama is unavailable or a response is invalid, a recorded survival fallback 
 
 - See a dark, minimalist interface around an orbitable procedural globe with human figures, wild and domesticated animals, growing crops, resources, forests, and buildings. Its fictional continents are generated from simulation rules and do not copy real Earth geography or satellite imagery. Drag to orbit, scroll to zoom, and click a figure to open that person's life record. If the device blocks WebGL, a 2D compatibility globe still shows terrain and agents.
 - Review age, health, hunger, thirst, energy, fear, stress, loneliness, disease, family, pregnancy, knowledge, temperament, last action, and recent memories. Adjust a living agent's biological stats from their inspector.
-- Every person uses `qwen2.5:0.5b` with independent identity and private history. Ollama requests all model layers on GPU, keeps Qwen resident, and retries allocation failures using RAM/CPU. The header reports actual GPU/CPU residency.
+- Every person uses the model configured by `OLLAMA_MODEL` (default `gemma3:270m`) with independent identity and private history. Ollama requests all model layers on GPU, keeps the model resident, and retries allocation failures using RAM/CPU. The header reports actual GPU/CPU residency.
 - Drag a wildfire, storm, flood, drought, disease outbreak, or mishap from the event menu onto a location on the globe. Or click an event and then its location. Fire, rain clouds, flood waves, drought dust, outbreak particles, and mishaps animate there without pausing the world; equivalent natural events can occur without the spectator.
 - Run, pause, or reset the world. The world runs only at 1×: **one simulated month takes one real minute**, and 12 months make a year. The clock advances during inference; agents can make decisions throughout the month, limited by model latency. Urgent food, water, exhaustion, illness rest, and infant care can invoke a recorded physical survival reflex while inference waits. These reflexes consume real resources and never supply social consent. Pause discards late model results.
 - Open the life timeline to review agent work, births, deaths, and world events. Select All, Work, Newborns, or Deaths, then click an agent's entry to inspect them on the globe. Birth and death updates stay in the timeline instead of appearing as life-event pop-ups.
@@ -37,7 +37,7 @@ If Ollama is unavailable or a response is invalid, a recorded survival fallback 
 - Hover people, animals, resources, crops, buildings, trees, and terrain to inspect them. Animals are small background food NPCs. Wildlife is limited by healthy habitat to at most 24 living wild animals, and kept animals have a separate settlement budget (4 + 2 per living person, capped at 24); no animal totals appear in the interface.
 - Agents can choose terrain care: restore habitat health and soil fertility, clean contaminated resources, and use available water. Hazards and wood gathering damage land; degraded soil affects crops.
 - Running worlds resume across backend restarts and retry recoverable errors. Reset preserves the current run/pause choice. New founders start on adjacent land, with reproduction still requiring independent mutual consent.
-- Family planning gets attention once immediate survival needs are met. A model-selected bond or child proposal remains answerable for seven simulated months; the other person must independently accept. Agents can approach a nearby partner. The current deliberately compressed gestation is **9 simulated months**. Each parent can choose a name through their Qwen decision menu. If birth happens first, the baby receives a provisional name derived from the parents' names; a parent can choose a lasting name during the newborn period. The baby's sex is sampled independently. Infants are smaller figures carried by their primary living caregiver.
+- Family planning gets attention once immediate survival needs are met. A model-selected bond or child proposal remains answerable for seven simulated months; the other person must independently accept. Agents can approach a nearby partner. The current deliberately compressed gestation is **9 simulated months**. Each parent can choose a name through their Gemma decision menu. If birth happens first, the baby receives a provisional name derived from the parents' names; a parent can choose a lasting name during the newborn period. The baby's sex is sampled independently. Infants are smaller figures carried by their primary living caregiver.
 - Fear rises during predator attacks, fights and deaths; stress and loneliness respond to danger, separation and social care. Bonded partners and parents may travel to one another, provide care, share ideas and teach. Repeated social actions are limited by the simulation clock. Pregnancy changes food, water and energy needs. Everyone can learn work and caregiving skills; occupations are shaped by individual traits and circumstances rather than fixed sex roles.
 - Death reports show the recorded fatal cause, with hunger, thirst, energy, disease and damage context in the life record. Historical snapshots keep their original attribution instead of inventing an exact cause.
 - Buildings and crafted objects are shared. Nearby families and groups pool actual materials. Public farms, campfires, granaries and shelters can be used by anyone; equipped tools can be handed over. Family, internal-group and external fights remain possible and are recorded distinctly.
@@ -50,7 +50,7 @@ If Ollama is unavailable or a response is invalid, a recorded survival fallback 
 
 - **Frontend:** Vite, Three.js, native HTML/CSS/JavaScript. It is a separate application, not rendered by FastAPI.
 - **Backend:** Python, FastAPI, Pydantic, HTTPX.
-- **Decision model:** Ollama `qwen2.5:0.5b`, shared across all agents. The model is pinned so all people use the same small Qwen model.
+- **Decision model:** One Ollama model shared across all agents, selected with `OLLAMA_MODEL` in `.env` (default `gemma3:270m`).
 - **Persistence:** SQLite world snapshots.
 
 ## Local setup
@@ -59,32 +59,35 @@ Requirements: Python 3.11 or newer, Node.js 20 or newer, and Ollama. The backend
 
 ### 1. Install the model
 
-```powershell
-ollama pull qwen2.5:0.5b
+```bash
+ollama pull "$(sed -n 's/^OLLAMA_MODEL=//p' .env.example)"
 ```
 
 ### 2. Install dependencies
 
-```powershell
-python -m pip install -r backend/requirements.txt
+```bash
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
 npm ci --prefix frontend
 ```
+
+The backend reads `.env` overrides and uses `.env.example` for defaults, including `OLLAMA_MODEL`. Copy `.env.example` to `.env` to customize settings; set `OLLAMA_MODEL` to any model tag installed in your Ollama instance.
 
 ### 3. Start the FastAPI backend
 
 From the repository root:
 
-```powershell
-python -m uvicorn app.main:app --app-dir backend --reload --port 8000
+```bash
+.venv/bin/uvicorn app.main:app --app-dir backend --reload --port 8000
 ```
 
-The backend starts the local `ollama serve` process when Ollama is installed but not already running, then warms Qwen on the GPU. The API and interactive documentation are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). FastAPI exposes the API only; it does not serve or build the spectator page.
+The backend starts the local `ollama serve` process when Ollama is installed but not already running, then warms Gemma 3 on the GPU. The API and interactive documentation are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). FastAPI exposes the API only; it does not serve or build the spectator page.
 
 ### 4. Start the independent frontend
 
 In a second terminal:
 
-```powershell
+```bash
 npm run dev --prefix frontend
 ```
 
@@ -92,7 +95,7 @@ Open [http://localhost:5173](http://localhost:5173). Vite serves the UI and prox
 
 ### Production frontend build
 
-```powershell
+```bash
 npm run build --prefix frontend
 npm run preview --prefix frontend
 ```
@@ -102,13 +105,13 @@ Vite writes static production assets to `frontend/dist/`. Host those assets sepa
 ## API overview
 
 - `GET /api/health` — API, Ollama, configured model readiness, and actual compute residency.
-- `GET /api/models` — the supported shared Qwen model and local availability.
+- `GET /api/models` — the configured shared model and local availability.
 - `GET /api/world` — authoritative world snapshot, including retained event records.
 - `POST /api/world/tick` — legacy manual step endpoint; the spectator interface does not expose it.
 - `POST /api/world/run?interval_seconds=3` / `POST /api/world/pause` — start or stop autonomous simulation.
 - `PATCH /api/world/speed` — legacy compatibility endpoint; the simulation stays at 1×.
 - `POST /api/world/reset?seed=7` — start a fresh world.
-- `PATCH /api/world/model` — validate/apply the pinned shared Qwen model; other models are rejected.
+- `PATCH /api/world/model` — validate/apply the configured shared model; other models are rejected.
 - `PATCH /api/agents/{agent_id}/state` — adjust an individual's health, hunger, thirst, or energy.
 - `POST /api/events` — apply a geographically bounded spectator event.
 
@@ -131,11 +134,10 @@ The clock advances from elapsed real time at a fixed 1× rate; model decisions n
 
 ## Verification
 
-```powershell
+```bash
 npm test --prefix frontend
 npm run build --prefix frontend
-$env:PYTHONPATH = "backend"
-python -m unittest discover -s backend/tests -v
+PYTHONPATH=backend .venv/bin/python -m unittest discover -s backend/tests -v
 ```
 
 Frontend checks execute the actual application update and frame functions with real Three.js geometry and math, replacing browser/GPU surfaces. They cover populated frames, movement, UV alignment, figure selection, camera collision limits, hover inspection, event animation/disposal, compatibility picking, death, burial, and reset; they do not claim to test a physical GPU. Backend checks use temporary databases and cover the shared-model contract, fallback construction, timing during slow inference, pause, resource conservation, food production, teaching, consent, birth, disease, persistence, wildlife spawning, terrain care, GPU-first fallback, fixed-clock behavior, and continued running after extinction or recoverable errors.

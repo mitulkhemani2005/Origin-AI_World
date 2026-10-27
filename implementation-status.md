@@ -2,12 +2,14 @@
 
 ## Current behavior
 
-The canonical design is [idea.md](idea.md). Current requirements pin one shared Qwen model, use a dark interface, and display local computer time while biology uses elapsed real time (one simulated month in one real minute at fixed 1×). Existing SQLite worlds migrate without being reset. New worlds place the founders on adjacent land in a viable natural habitat; different seeds produce different terrain.
+The canonical design is [idea.md](idea.md). One shared Ollama model is selected through `OLLAMA_MODEL` (default `gemma3:270m`). The interface is dark, and biology advances from elapsed real time (one simulated month in one real minute at fixed 1×). Existing SQLite worlds migrate without being reset. New worlds place the founders on adjacent land in a viable natural habitat; different seeds produce different terrain.
+
+The live Ollama scenarios recorded below were run with the earlier Qwen model. They document prior behavior and are not validation results for other model choices.
 
 | System | Current implementation |
 | --- | --- |
 | World display | Procedural globe, aligned biome texture and entity coordinates, human figures, animals, resources, buildings, crops, orbit/zoom, a people view that follows movement, direct selection, hover inspection, camera collision protection, and visible rendering errors. A 2D compatibility view is available if WebGL initialization fails. |
-| Private minds | Separate observations, memories, relationships, traits and skills. One shared Qwen model selects a concrete opportunity; the engine executes and validates it. Meaningful task continuations avoid random movement between every LLM turn. |
+| Private minds | Separate observations, memories, relationships, traits and skills. One configured shared model selects a concrete opportunity; the engine executes and validates it. Meaningful task continuations avoid random movement between every LLM turn. |
 | Survival | Monthly nutrition, hydration, fatigue, illness and exposure updates. Explicit physical survival reflexes work during inference; spring water replenishes each month and new stock dilutes spoilage. Food and water used in care consume real resources. Rest and care cannot heal unlimited health in one month. |
 | Shelter and material work | Local navigation to suitable dry building sites, capacity/demand checks, family/group material pools, real building costs, repairs, shared shelter and property creator records. |
 | Animals and farming | Small NPC food animals, movement independent of inference, shared habitat/settlement budgets for migration, spawning and births, taming, care, food collection limits, crops that require planting and growth before harvest, contamination and raw-food disease risk. Building a farm does not create an instant food stock. |
@@ -18,7 +20,7 @@ The canonical design is [idea.md](idea.md). Current requirements pin one shared 
 | Death and hazards | Disease, injuries, starvation/dehydration consequences, age risks, bodies, mourning, burial, grave markers, natural hazards and bounded spectator events with separate sources and geographic animations. Exact fatal damage is recorded immediately and shown in the persistent timeline and life record. Predator attacks, armed/caregiver defence, and shelter/fire protection are implemented; at most two predators remain within the animal budget. Events never pause the world. |
 | Time and persistence | A separate elapsed-time loop advances biology during slow model calls at a fixed 1× rate. Action rounds run on their own cadence. Pause invalidates late proposals. SQLite stores pending work, run/pause choice and random state. One month takes one real minute. Running worlds resume on restart and continue through extinction and recoverable errors. |
 | Timeline | The spectator can filter retained work and world events by All, Work, Newborns, and Deaths. Entries identify agents, show simulated month, and open the relevant life record when selected. |
-| Compute | Only Qwen; full GPU requests, resident warmup, RAM/CPU retry on GPU allocation failure, and actual device/VRAM status. Local Ollama confirms 100% GPU on the RTX 4060. |
+| Compute | Configured Ollama model; full GPU requests, resident warmup, RAM/CPU retry on GPU allocation failure, and actual device/VRAM status. |
 | Inspection | Action reason/result, current project, source (`llm`, `continuation`, `fallback`), original intention source, event provenance, biological stats, family and knowledge. |
 
 The engine makes feasible opportunities available and resolves consequences. It does not guarantee births, technological progress, cooperation, survival, religion or any particular historical path. A small model can still make poor choices. Failed inference is explicitly recorded as fallback behavior.

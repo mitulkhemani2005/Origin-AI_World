@@ -1068,14 +1068,15 @@ async function refreshWorld() {
 async function refreshModels() {
   try {
     const [health, response] = await Promise.all([api("/api/health"), api("/api/models")]);
-  const selected = world?.global_model || health.default_model || "qwen2.5:0.5b";
+    const selected = world?.global_model || health.default_model;
     const options = (response.models || []).map((model) => `<option value="${escapeHtml(model)}">${escapeHtml(model)}</option>`);
     if (!response.models?.includes(selected)) options.unshift(`<option value="${escapeHtml(selected)}">${escapeHtml(selected)} · unavailable</option>`);
     ui.model.innerHTML = options.join("") || `<option value="${escapeHtml(selected)}">${escapeHtml(selected)}</option>`;
     ui.model.value = selected;
     ui.model.disabled = true;
-    $("#compute-status").textContent = `QWEN · ${(health.compute?.device || "checking").toUpperCase()}`;
-    ui.model.title = health.model_ready ? "Qwen guides each separate private mind." : "Qwen is unavailable. The world uses a recorded survival fallback.";
+    const modelName = health.current_model || health.default_model || selected || "Ollama";
+    $("#compute-status").textContent = `${modelName.toUpperCase()} · ${(health.compute?.device || "checking").toUpperCase()}`;
+    ui.model.title = health.model_ready ? `${modelName} guides each separate private mind.` : `${modelName} is unavailable. The world uses a recorded survival fallback.`;
   } catch (error) { ui.model.innerHTML = "<option>Ollama unavailable</option>"; ui.model.title = error.message; }
 }
 
