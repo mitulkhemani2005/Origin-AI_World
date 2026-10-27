@@ -44,7 +44,7 @@ async def _ensure_local_ollama() -> None:
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    """Preserve the user's run choice and warm the shared Gemma model on GPU."""
+    """Preserve the user's run choice and warm the shared Qwen model on GPU."""
     await _ensure_local_ollama()
     warmup = asyncio.create_task(engine._ollama.warm_model())
     if engine.state.running:

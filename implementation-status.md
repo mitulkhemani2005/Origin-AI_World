@@ -2,7 +2,7 @@
 
 ## Current behavior
 
-The canonical design is [idea.md](idea.md). One shared Ollama model is selected through `OLLAMA_MODEL` (default `gemma3:270m`). The interface is dark, and biology advances from elapsed real time (one simulated month in one real minute at fixed 1×). Existing SQLite worlds migrate without being reset. New worlds place the founders on adjacent land in a viable natural habitat; different seeds produce different terrain.
+The canonical design is [idea.md](idea.md). One shared Ollama model is selected through `OLLAMA_MODEL` (default `qwen2.5:0.5b`). The interface is dark, and biology advances from elapsed real time (one simulated month in one real minute at fixed 1×). Existing SQLite worlds migrate without being reset. New worlds place the founders on adjacent land in a viable natural habitat; different seeds produce different terrain.
 
 The live Ollama scenarios recorded below were run with the earlier Qwen model. They document prior behavior and are not validation results for other model choices.
 

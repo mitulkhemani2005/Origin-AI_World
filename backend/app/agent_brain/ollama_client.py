@@ -411,7 +411,7 @@ class OllamaClient:
     @staticmethod
     def _family_names(parent: Agent, mother: Agent, world: WorldState,
                       other_parent_id: str | None = None) -> list[str]:
-        """Offer short names influenced by the parents; the person chooses one through Gemma."""
+        """Offer short names influenced by the parents; the person chooses one through Qwen."""
         other = next((person for person in world.agents
                       if person.id == (other_parent_id or mother.other_parent_id)), None)
         roots = [mother.name, other.name if other else parent.name]

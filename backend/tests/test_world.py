@@ -133,7 +133,7 @@ class WorldTests(unittest.IsolatedAsyncioTestCase):
             action = await OllamaClient().decide(self.engine.state.agents[0], self.engine.state)
         self.assertEqual(action.action, "gather")
         self.assertEqual(action.resource_kind, "wood")
-        self.assertEqual(captured[0]["model"], "gemma3:270m")
+        self.assertEqual(captured[0]["model"], "qwen2.5:0.5b")
         self.assertEqual(captured[0]["options"]["num_gpu"], 999)
         self.assertGreaterEqual(captured[0]["options"]["num_predict"], 128)
         self.assertNotIn("target_agent_id", captured[0]["format"]["properties"])
@@ -252,11 +252,11 @@ class WorldTests(unittest.IsolatedAsyncioTestCase):
             return AgentAction(action="rest")
         self.engine._ollama.decide = decide
         with patch("app.api.routes.engine", self.engine), patch.object(
-            OllamaClient, "installed_models", new=AsyncMock(return_value=["gemma3:270m"])
+            OllamaClient, "installed_models", new=AsyncMock(return_value=["qwen2.5:0.5b"])
         ):
             async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://world") as client:
                 self.assertEqual((await client.get("/api/world")).status_code, 200)
-                self.assertEqual((await client.get("/api/models")).json()["models"], ["gemma3:270m"])
+                self.assertEqual((await client.get("/api/models")).json()["models"], ["qwen2.5:0.5b"])
                 self.assertEqual((await client.patch("/api/world/model", json={"model": "another-model"})).status_code, 422)
                 person = self.engine.state.agents[0]
                 result = await client.patch(f"/api/agents/{person.id}/state", json={"health": 90})

@@ -18,7 +18,7 @@ The starting date is an approximate thematic choice. The simulation is not a sci
 
 ### Shared model, separate minds
 
-All agents use one world-wide LLM model, selected by `OLLAMA_MODEL` in `.env` (default `gemma3:270m`). Each agent still has an independent mind: private observations, memories, experiences, traits, relationships, spatial memories, and life history are sent separately to that shared model for each decision. People remember places where they find food and water and where they build; emergency choices can route them to remembered sources or shelters if those places still exist and a physical route is available. Sharing an LLM does not mean sharing a conversation or a collective brain. All people in a world use the same configured model.
+All agents use one world-wide LLM model, selected by `OLLAMA_MODEL` in `.env` (default `qwen2.5:0.5b`). Each agent still has an independent mind: private observations, memories, experiences, traits, relationships, spatial memories, and life history are sent separately to that shared model for each decision. People remember places where they find food and water and where they build; emergency choices can route them to remembered sources or shelters if those places still exist and a physical route is available. Sharing an LLM does not mean sharing a conversation or a collective brain. All people in a world use the same configured model.
 
 An LLM is one part of an agent's decision process, not the world itself. The agent receives a bounded view of its situation and chooses from available actions. The world simulation decides what those actions cause. After the brain chooses a resource trip or construction task, the body continues walking or gathering until that action completes; urgent biological needs can interrupt it for a new decision. This prevents each walking step from becoming an unrelated new intention.
 
@@ -105,7 +105,7 @@ The separate dark-themed frontend should let the spectator:
 - Hover world objects for details, animate events at their location, keep animals very small and secondary, without population counters, and protect the camera from entering terrain.
 - Let agents choose to restore habitat health, fertility, and resource cleanliness. Food wildlife replenishes according to suitable habitat under a small world-wide budget. Spawning and births use the same limits; excess animals migrate away instead of leaving carcass piles.
 - Start founders on adjacent habitable land; proximity enables interaction without forcing reproduction.
-- Load the model selected by `OLLAMA_MODEL` (default Gemma 3 270M), prefer full GPU offload, retain RAM/CPU fallback for allocation failures, and display actual residency. Inspect the shared model readiness. Keep each agent's private history intact.
+- Load the model selected by `OLLAMA_MODEL` (default Qwen 2.5 0.5B), prefer full GPU offload, retain RAM/CPU fallback for allocation failures, and display actual residency. Inspect the shared model readiness. Keep each agent's private history intact.
 - Drag events onto a location in the land, with range and severity determined by the world simulation.
 
 ## Guiding principles

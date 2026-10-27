@@ -94,7 +94,7 @@ Place memories are stored per `Agent` in `place_memories`; successful food and w
 6. For a visual mismatch, compare the payload to `frontend/src/app.js`. Run `npm test --prefix frontend` before the production build: bundling alone cannot detect unsupported runtime methods. The viewport shows frame errors instead of leaving a silently frozen ocean. Texture UV longitude must align with `worldToScene`; camera matrices must update before labels and picking.
 7. The standalone frontend uses Vite at port 5173. Confirm FastAPI is running at 8000 and that `frontend/vite.config.js` proxies `/api`.
 8. The SQLite snapshot is at `data/world.sqlite3` by default. Preserve local data when debugging; `.gitignore` intentionally excludes it.
-9. For malformed model output, inspect `OllamaClient.decide`: Gemma 3 returns a short numbered choice, reason and optional message. The server maps the choice back to a concrete bounded action. Do not restore the old 48-token full-action schema, which truncated IDs and drove nearly continuous fallbacks.
+9. For malformed model output, inspect `OllamaClient.decide`: Qwen 2.5 returns a short numbered choice, reason and optional message. The server maps the choice back to a concrete bounded action. Do not restore the old 48-token full-action schema, which truncated IDs and drove nearly continuous fallbacks.
 
 Run backend checks with `PYTHONPATH=backend .venv/bin/python -m unittest discover -s backend/tests -v`. Each check uses temporary databases. Tests include biology advancing while model calls wait and pause discarding a late model result.
 
@@ -108,7 +108,7 @@ For production, `npm run build --prefix frontend` creates a separate `frontend/d
 
 - This is a small illustrative simulation, not a scientific reconstruction of millions of years of hominin evolution.
 - Biome, animal, crop, disease, mortality, and hazard rules remain prototype simplifications.
-- LLM behavior is limited to each agent's available action schema and the information in its individual observation. The default Gemma 3 270M is compact and quick, with less reasoning capacity than larger models.
+- LLM behavior is limited to each agent's available action schema and the information in its individual observation. The default Qwen 2.5 0.5B is compact and quick, with less reasoning capacity than larger models.
 - A single local SQLite snapshot is persisted. The browser uses polling, not a streaming transport.
 - The 36×18 world is a compact spherical abstraction with fictional geography, not a scientific map of Earth or a reconstruction of millions of years of evolution.
 
